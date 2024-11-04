@@ -14,10 +14,11 @@ Spigot Plugins, Redbot Cogs, C++ Projects, C++ DLL Projects
 
 Support for more templates will be added over time.
 
-## Usage
-
 > [!TIP]  
 > Instructions on how to create a skeleton template can be found in the [wiki](https://github.com/OpticFusion1/Create-Project/wiki)  
+
+## Usage
+Run `create-project.exe`, pick a project, and input the relevant data
 
 ## Run
 The first step to running Create-Project is obtaining a compiled exe.
