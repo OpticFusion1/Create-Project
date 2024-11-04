@@ -4,7 +4,7 @@ LDFLAGS = -s
 SRCDIR = src/code
 
 BUILDDIR = build
-TARGET = Program.exe
+TARGET = create-project.exe
 
 SOURCES := $(shell find $(SRCDIR) -name '*.cpp')
 OBJECTS := $(SOURCES:$(SRCDIR)/%.cpp=$(BUILDDIR)/%.o)
