@@ -1,0 +1,17 @@
+{
+    "fields": [
+        { "name": "projectName", "prompt": "Enter project name" },
+        { "name": "cogName", "prompt": "Enter cog name" },
+        { "name": "cogDescription", "prompt": "Enter cog description" }
+    ],
+    "files": [
+        {
+            "path": "{cogName}.py",
+            "template": "templates/redbot_cog.py.tpl"
+        },
+        {
+            "path": "__init__.py",
+            "template": "templates/__init__.py.tpl"
+        }
+    ]
+}

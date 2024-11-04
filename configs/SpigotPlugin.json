@@ -1,0 +1,29 @@
+{
+    "fields": [
+        { "name": "projectName", "prompt": "Enter plugin name" },
+        { "name": "projectDescription", "prompt": "Enter plugin description" },
+        { "name": "projectAuthor", "prompt": "Enter plugin author"},
+        { "name": "projectDir", "prompt": "Enter project directory (Slash Separated)"},
+        { "name": "projectPackage", "prompt": "Enter project package (Dot Separated)"},
+        { "name": "projectMain", "prompt": "Enter plugin main class"}
+    ],
+    "directories": [
+        {"path": "src/main/java"},
+        {"path": "src/main/resources"},
+        {"path": "target"}
+    ],
+    "files": [
+        {
+            "path": "pom.xml",
+            "template": "templates/spigot_pom.xml.tpl"
+        },
+        {
+            "path": "src/main/java/{projectDir}/{projectMain}.java",
+            "template": "templates/spigot_main_class.java.tpl"
+        },
+        {
+            "path": "src/main/resources/plugin.yml",
+            "template": "templates/spigot_plugin.yml.tpl"
+        }
+    ]
+}

@@ -1,0 +1,20 @@
+{
+    "fields": [
+        { "name": "projectName", "prompt": "Enter project name" },
+        { "name": "exeName", "prompt": "Enter exe name" }
+    ],
+    "directories": [
+        {"path": "build"},
+        {"path": "src/code"}
+    ],
+    "files": [
+        {
+            "path": "Makefile",
+            "template": "templates/makefile_cpp.tpl"
+        },
+        {
+            "path": "src/code/main.cpp",
+            "template": "templates/main.cpp.tpl"
+        }
+    ]
+}
