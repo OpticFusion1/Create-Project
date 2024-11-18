@@ -101,55 +101,84 @@ void CLI::start()
 void CLI::generateProject(const json& config, const std::unordered_map<std::string, std::string>& userInputs) {
     try 
     {
-        if (userInputs.find("projectName") == userInputs.end()) 
+        if (userInputs.find("projectName") == userInputs.end())
         {
             throw std::runtime_error("Missing 'projectName' in user inputs.");
         }
-        std::string outputDir = replace_all(str_tolower(userInputs.at("projectName")), " ", "_");
-        fs::create_directories(outputDir);
-        std::cout << "Creating project at: " << outputDir << std::endl;
-        if (!config.contains("files") || !config["files"].is_array()) 
+        bool dirsOnly = false;
+        bool setupGit = true;
+        if (config.contains("config") && config["config"].is_object())
         {
-            throw std::runtime_error("Missing or invalid 'files' key in configuration.");
+            const auto& configObj = config["config"];
+            setupGit = configObj.contains("setup_git") && configObj["setup_git"].is_boolean() ? configObj["setup_git"].get<bool>() : setupGit;
+            dirsOnly = configObj.contains("directories_only") && configObj["directories_only"].is_boolean() ? configObj["directories_only"].get<bool>() : dirsOnly;
+        }
+        std::string outputDir = replace_all(str_tolower(userInputs.at("projectName")), " ", "_");
+        std::cout << "Creating project at: " << outputDir << std::endl;
+        auto createDirectories = [&](const std::string& path) {
+            fs::create_directories(fs::path(TemplateRenderer::renderTemplate(path, userInputs)));
+        };
+        if (!dirsOnly) 
+        {
+            fs::create_directories(outputDir);
         }
 
         if (config.contains("directories")) 
         {
             if (!config["directories"].is_array()) 
             {
-                throw std::runtime_error("'directorie' configuration key is not an array");
+                throw std::runtime_error("'directories' configuration key is not an array");
             }
-            for (const auto& dir : config["directories"])
+            
+            for (const auto& dir : config["directories"]) 
             {
                 if (!dir.contains("path")) 
                 {
-                    throw std::runtime_error("Each file object must contain a 'path' key.");
+                    throw std::runtime_error("Each directory object must contain a 'path' key.");
                 }
-                fs::path fullFilePath = fs::path(outputDir) / dir["path"].get<std::string>();
-                fs::create_directories(fullFilePath);
+                if (dirsOnly) 
+                {
+                    createDirectories(dir["path"].get<std::string>());
+                } 
+                else 
+                {
+                    std::string fullFilePath = outputDir + "/" + dir["path"].get<std::string>();
+                    createDirectories(fullFilePath);
+                }
             }
         }
-        for (const auto& file : config["files"]) 
+
+        if (!dirsOnly) 
         {
-            if (!file.contains("path") || !file.contains("template")) 
+            if (!config.contains("files") || !config["files"].is_array())
             {
-                throw std::runtime_error("Each file object must contain 'path' and 'template' keys.");
+                throw std::runtime_error("Missing or invalid 'files' key in configuration.");
             }
-            std::string relativeFilePath = TemplateRenderer::renderTemplate(file["path"].get<std::string>(), userInputs);
-            fs::path fullFilePath = fs::path(outputDir) / relativeFilePath;
-            fs::create_directories(fullFilePath.parent_path());
-            std::string templatePath = file["template"].get<std::string>();
-            std::string fileContent = loadTemplateContent(templatePath, userInputs);
-            std::ofstream outFile(fullFilePath);
-            if (!outFile) 
+            for (const auto& file : config["files"]) 
             {
-                throw std::runtime_error("Could not open file for writing: " + fullFilePath.string());
+                if (!file.contains("path") || !file.contains("template")) 
+                {
+                    throw std::runtime_error("Each file object must contain 'path' and 'template' keys.");
+                }
+                std::string relativeFilePath = TemplateRenderer::renderTemplate(file["path"].get<std::string>(), userInputs);
+                fs::path fullFilePath = fs::path(outputDir) / relativeFilePath;
+                fs::create_directories(fullFilePath.parent_path());
+                std::string templatePath = file["template"].get<std::string>();
+                std::string fileContent = loadTemplateContent(templatePath, userInputs);
+                std::ofstream outFile(fullFilePath);
+                if (!outFile) 
+                {
+                    throw std::runtime_error("Could not open file for writing: " + fullFilePath.string());
+                }
+                outFile << fileContent;
+                outFile.close();
+                std::cout << "Generated file: " << fullFilePath.string() << std::endl;
             }
-            outFile << fileContent;
-            outFile.close();
-            std::cout << "Generated file: " << fullFilePath.string() << std::endl;
         }
-        setup_git(outputDir);
+        if (setupGit) 
+        {
+            setup_git(outputDir);
+        }
         std::cout << "Project created successfully at " << outputDir << std::endl;
     } catch (const std::exception& e) 
     {
