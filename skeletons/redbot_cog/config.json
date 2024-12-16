@@ -7,11 +7,11 @@
     "files": [
         {
             "path": "{cogName}.py",
-            "template": "templates/redbot_cog.py.tpl"
+            "template": "redbot_cog.py.tpl"
         },
         {
             "path": "__init__.py",
-            "template": "templates/__init__.py.tpl"
+            "template": "__init__.py.tpl"
         }
     ]
 }

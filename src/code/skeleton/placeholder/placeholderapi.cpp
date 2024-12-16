@@ -1,9 +1,9 @@
-#include "templaterenderer.h"
+#include "placeholderapi.h"
 #include <fstream>
 #include <stdexcept>
 #include <sstream>
 
-std::string TemplateRenderer::renderTemplate(const std::string& templateStr, const std::unordered_map<std::string, std::string>& userInputs) 
+std::string PlaceholderAPI::translatePlaceholders(const std::string& templateStr, const std::unordered_map<std::string, std::string>& userInputs) 
 {
     std::string result = templateStr;
 

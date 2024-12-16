@@ -15,15 +15,15 @@
     "files": [
         {
             "path": "pom.xml",
-            "template": "templates/spigot_pom.xml.tpl"
+            "template": "spigot_pom.xml.tpl"
         },
         {
             "path": "src/main/java/{projectDir}/{projectMain}.java",
-            "template": "templates/spigot_main_class.java.tpl"
+            "template": "spigot_main_class.java.tpl"
         },
         {
             "path": "src/main/resources/plugin.yml",
-            "template": "templates/spigot_plugin.yml.tpl"
+            "template": "spigot_plugin.yml.tpl"
         }
     ]
 }

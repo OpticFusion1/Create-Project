@@ -1,18 +1,14 @@
-#include "project/projectloader.h"
-#include "cli/cli.h"
-#include <iostream>
+#include "skeleton/loader/skeletonloader.h"
 
-int main() 
+int main()
 {
-    try 
-    {
-        ProjectLoader loader("configs/");
-        CLI cli(loader);
-        cli.start();
-    } catch (const std::exception& e) 
-    {
-        std::cerr << "Error: " << e.what() << std::endl;
-        return 1;
-    }
-    return 0;
+  SkeletonLoader loader("skeletons");
+  loader.loadSkeletons();
+  loader.printSkeletons();
+  std::cout << "Choose a skeleton: ";
+  std::string choice;
+  std::cin >> choice;
+  std::cin.ignore();
+  Skeleton skeleton = loader.getSkeleton(choice);
+  skeleton.generate();
 }

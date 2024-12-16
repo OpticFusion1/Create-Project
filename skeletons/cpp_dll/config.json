@@ -1,0 +1,26 @@
+{
+	"fields": [
+		{
+			"name": "projectName", "prompt": "Enter project name"
+		},
+		{
+			"name": "dllName", "prompt": "Enter DLL name"
+		}
+	],
+	"directories": [
+		{
+			"path": "build",
+			"path": "src/code"
+		}
+	],
+	"files": [
+		{
+			"path": "Makefile",
+			"template": "makefile_dll.tpl"
+		},
+		{
+			"path": "src/code/main.cpp",
+			"template": "main.cpp.tpl"
+		}
+	]
+}
