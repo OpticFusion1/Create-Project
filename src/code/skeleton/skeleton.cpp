@@ -20,7 +20,8 @@ void Skeleton::load()
 {
   std::cout << "Loading skeleton " << skeletonDir << std::endl;
   std::string configFileLoc = "skeletons/" + skeletonDir + "/config.json";
-  std::ifstream configFile(configFileLoc);
+  Util util;
+  std::ifstream configFile(util.getRelativeFilePath(configFileLoc));
   if (!configFile.is_open())
   {
     throw std::runtime_error("Could not open configuration file '" + configFileLoc + "'.");

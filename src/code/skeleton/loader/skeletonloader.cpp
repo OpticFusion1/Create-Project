@@ -6,7 +6,8 @@ void SkeletonLoader::loadSkeletons()
 {
   try 
   {
-    for (const auto& entry : fs::directory_iterator(skeletonsPath))
+    Util util;
+    for (const auto& entry : fs::directory_iterator(util.getRelativeFilePath(skeletonsPath)))
     {
       std::string skeletonDir = entry.path().filename().string();
       Skeleton skeleton(skeletonDir);
