@@ -12,6 +12,7 @@ void loadJsonArray(const nlohmann::json& config, const std::string& key, std::ve
   }
   for (const auto& item : config[key])
   {
+    std::cout << "Pushing key: " << key << " Item: " << item << std::endl;
     container.push_back(item);
   }
 }
@@ -24,22 +25,35 @@ void Skeleton::load()
   std::ifstream configFile(util.getRelativeFilePath(configFileLoc));
   if (!configFile.is_open())
   {
-    throw std::runtime_error("Could not open configuration file '" + configFileLoc + "'.");
+    std::cerr << "Could not open configuration file '" << configFileLoc << "'." << std::endl;
+    return;
   }
   json config;
-  configFile >> config;
-  configFile.close();
+  try {
+    configFile >> config;
+    std::cout << "Loaded config" << std::endl;
+  } catch (const std::exception& e) {
+    std::cerr << "Error loading config: " << e.what() << std::endl;
+    return;
+  }
+  //configFile.close();
+  std::cout << "Loading config fields" << std::endl;
   loadJsonArray(config, "fields", fields);
+  std::cout << "Loading config directories" << std::endl;
   loadJsonArray(config, "directories", directories);
+  std::cout << "Loading config files" << std::endl;
   loadJsonArray(config, "files", files);
+  std::cout << "Loading config config" << std::endl;
   loadJsonArray(config, "config", configOptions);
   std::cout << "Loaded skeleton " << skeletonDir << std::endl;
 }
 
 std::string str_tolower(std::string str)
 {
-	transform(str.begin(), str.end(), str.begin(), [](unsigned char c){return tolower(c);});
-	return str;
+    std::transform(str.begin(), str.end(), str.begin(), [](unsigned char c) {
+        return std::tolower(c);
+    });
+    return str;
 }
 
 std::string replace_all(std::string str, const std::string& from, const std::string& to)
@@ -156,7 +170,6 @@ void Skeleton::generate()
       {
         throw std::runtime_error("Each file object must contain 'path' and 'template' keys.");
       }
-      PlaceholderAPI placeholderAPI;
       std::string relativeFilePath = placeholderAPI.translatePlaceholders(file["path"].get<std::string>(), userInputs);
       fs::path fullFilePath = fs::path(outputDir) / relativeFilePath;
       fs::create_directories(fullFilePath.parent_path());
